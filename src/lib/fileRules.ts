@@ -1,10 +1,7 @@
-// File rules shared by the website (browser) and the email API (server),
-// so both always agree. Change a limit here and it changes everywhere.
-
 export const FILE_LIMITS = {
-  maxFileMB: 5, // per file
-  maxTotalMB: 15, // all files in one submission
-  maxDocuments: 5, // membership "supporting documents"
+  maxFileMB: 4, 
+  maxTotalMB: 4, 
+  maxDocuments: 5, 
 };
 
 // extension -> MIME types browsers may report for it

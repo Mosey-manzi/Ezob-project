@@ -1,10 +1,3 @@
-// The Ezob email API. It receives the three public forms, validates them and
-// sends one email to the administration through Resend.
-//
-// It runs inside the Vite dev/preview server (see vite.config.ts), so
-// `npm run dev` starts the website AND this API together. The Resend API key
-// lives only here, on the server side - it is never sent to the browser.
-
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { mkdir, writeFile } from "node:fs/promises";
 import { randomInt } from "node:crypto";
@@ -21,13 +14,15 @@ import {
 
 export type ApiConfig = {
   resendApiKey?: string;
-  adminEmail?: string; // one address, or several separated by commas
+  adminEmail?: string; 
   fromEmail?: string;
   logoUrl?: string;
-  resendApiUrl?: string; // only changed by the automated tests
-  previewDir?: string; // where preview-mode emails are written
-  rateLimitMax?: number; // submissions per IP per window
+  resendApiUrl?: string; 
+  previewDir?: string; 
+  rateLimitMax?: number; 
   rateLimitWindowMs?: number;
+    allowPreview?: boolean; 
+  trustProxy?: boolean; 
 };
 
 const ROUTES: Record<string, FormKind> = {
@@ -38,9 +33,7 @@ const ROUTES: Record<string, FormKind> = {
 
 const PLACEHOLDER_KEY = "re_YOUR_RESEND_API_KEY";
 const PLACEHOLDER_ADMIN = "email@example.org";
-const MAX_REQUEST_BYTES = (FILE_LIMITS.maxTotalMB + 1) * MB;
-
-export function isPlaceholder(value: string | undefined, placeholder: string): boolean {
+const MAX_REQUEST_BYTES = Math.round((FILE_LIMITS.maxTotalMB + 0.4) * MB);export function isPlaceholder(value: string | undefined, placeholder: string): boolean {
   return !value || value.trim() === "" || value.trim() === placeholder || value.includes("YOUR_");
 }
 
@@ -52,6 +45,11 @@ export function makeReference(now = new Date()): string {
 }
 
 async function readBody(req: IncomingMessage, limit: number): Promise<Buffer> {
+    const preRead = (req as { body?: unknown }).body;
+  if (Buffer.isBuffer(preRead)) {
+    if (preRead.length > limit) throw new ApiError(413, "too_large", "request too large");
+    return preRead;
+  }
   const declared = Number(req.headers["content-length"] ?? 0);
   if (declared > limit) throw new ApiError(413, "too_large", "request too large");
   const chunks: Buffer[] = [];
@@ -70,6 +68,15 @@ function sendJson(res: ServerResponse, status: number, body: Record<string, unkn
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.setHeader("Cache-Control", "no-store");
   res.end(JSON.stringify(body));
+}
+
+function clientIp(req: IncomingMessage, trustProxy: boolean): string {
+  if (trustProxy) {
+    const forwarded = req.headers["x-forwarded-for"];
+    const first = (Array.isArray(forwarded) ? forwarded[0] : forwarded)?.split(",")[0]?.trim();
+    if (first) return first;
+  }
+  return req.socket.remoteAddress ?? "unknown";
 }
 
 function createLimiter(max: number, windowMs: number) {
@@ -147,8 +154,9 @@ async function writePreview(config: ApiConfig, sub: Submission, reference: strin
 export function createApiMiddleware(config: ApiConfig) {
   const allow = createLimiter(config.rateLimitMax ?? 20, config.rateLimitWindowMs ?? 15 * 60_000);
   const previewMode = isPlaceholder(config.resendApiKey, PLACEHOLDER_KEY);
+  const previewAllowed = config.allowPreview ?? true;
 
-  if (previewMode) {
+  if (previewMode && previewAllowed) {
     console.log(
       "[ezob-api] No real RESEND_API_KEY found: running in PREVIEW MODE (emails are saved to .email-previews/, not sent).",
     );
@@ -171,17 +179,27 @@ export function createApiMiddleware(config: ApiConfig) {
     }
 
     try {
-      if (!allow(req.socket.remoteAddress ?? "unknown"))
+            if (!allow(clientIp(req, config.trustProxy ?? false)))
         throw new ApiError(429, "rate_limited", "too many submissions");
 
-      if (!previewMode && isPlaceholder(config.adminEmail, PLACEHOLDER_ADMIN)) {
-        console.error("[ezob-api] ADMIN_EMAIL is not set (or still the placeholder). Edit .env.local and restart.");
-        throw new ApiError(500, "server", "admin email not configured");
-      }
-      if (!previewMode && !config.fromEmail) {
-        console.error("[ezob-api] FROM_EMAIL is not set. Edit .env.local and restart.");
-        throw new ApiError(500, "server", "from email not configured");
-      }
+        if (previewMode && !previewAllowed) {
+          console.error(
+            "[ezob-api] RESEND_API_KEY is missing or still the placeholder. In Vercel: Project > Settings > Environment Variables, then redeploy.",
+          );
+          throw new ApiError(500, "server", "resend key not configured");
+        }
+        if (!previewMode && isPlaceholder(config.adminEmail, PLACEHOLDER_ADMIN)) {
+          console.error(
+            "[ezob-api] ADMIN_EMAIL is not set (or still the placeholder). Set it in .env.local (local) or Vercel Environment Variables (production).",
+          );
+          throw new ApiError(500, "server", "admin email not configured");
+        }
+        if (!previewMode && !config.fromEmail) {
+          console.error(
+            "[ezob-api] FROM_EMAIL is not set. Set it in .env.local (local) or Vercel Environment Variables (production).",
+          );
+          throw new ApiError(500, "server", "from email not configured");
+        }
 
       const contentType = String(req.headers["content-type"] ?? "");
       if (!contentType.startsWith("multipart/form-data"))

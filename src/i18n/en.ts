@@ -32,7 +32,7 @@ export const en = {
   stats: [
     { top: "Sunday", main: "5:00 PM", sub: "Weekly rehearsal" },
     { top: "Monthly", main: "Prayer & fasting", sub: "Growing together" },
-    { top: "1,500 RWF", main: "Monthly giving", sub: "Shared commitment" },
+    { top: "Season", main: "Helping", sub: "Shared commitment" },
     { top: "70%", main: "Attendance goal", sub: "Faithful service" },
   ],
 
@@ -43,7 +43,7 @@ export const en = {
     titleLine2Em: "family.",
     body: "We bring together people from different churches with one shared desire: to serve Jesus Christ and help others encounter Him through wholehearted worship.",
     visionLabel: "Our vision",
-    vision: "Every member known, equipped, and given room to serve with purpose.",
+    vision: "Every member known, equipped, and given room to serve with a heart full of gratitude.",
   },
 
   ministries: {

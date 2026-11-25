@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && npm run build:api && vite build",
+    "build:api": "tsc -p server/tsconfig.build.json",    
     "lint": "eslint .",
     "preview": "vite preview",
     "test:api": "node --experimental-strip-types --test server/tests.ts"
