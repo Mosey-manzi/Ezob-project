@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Ezob Praise and Worship</title>
+  <desc id="desc">A stylized open book with five rising coral and orange rays beside the words Ezob Praise and Worship. Transparent background.</desc>
+  <defs>
+    <linearGradient id="rayGradient" x1="0" y1="0" x2="0.15" y2="1">
+      <stop offset="0" stop-color="#F6A64E"/>
+      <stop offset="1" stop-color="#E85D70"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rising rays above the open book -->
+  <g fill="url(#rayGradient)">
+    <path d="M112 420 C104 337 68 219 36 126 C82 175 132 292 151 412 Z"/>
+    <path d="M161 426 C157 312 135 151 101 40 C149 132 183 294 185 431 Z"/>
+    <path d="M222 450 C218 324 220 128 236 0 C253 130 254 324 244 450 L233 462 Z"/>
+    <path d="M278 430 C282 296 316 132 365 40 C333 157 309 324 307 426 Z"/>
+    <path d="M328 412 C348 292 402 175 454 126 C414 222 383 338 377 420 Z"/>
+  </g>
+
+  <!-- Open book -->
+  <g fill="#FFFFFF">
+    <path d="M18 448 C82 450 162 478 235 541 C176 508 95 486 0 486 Z"/>
+    <path d="M454 448 C389 450 309 478 236 541 C295 508 376 486 472 486 Z"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g fill="#FFFFFF" font-family="DejaVu Serif Condensed, Georgia, serif" font-weight="bold">
+    <text x="520" y="248" font-size="145" letter-spacing="-7">Ezob</text>
+    <text x="520" y="405" font-size="145" letter-spacing="-7">Praise</text>
+    <text x="985" y="405" font-size="69" letter-spacing="-2">and</text>
+    <text x="520" y="565" font-size="145" letter-spacing="-8">Worship</text>
+  </g>
+</svg>

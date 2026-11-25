@@ -1,0 +1,226 @@
+@import url("https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=DM+Sans:wght@400;500;600;700&family=Diphylleia&family=Fruktur:ital@0;1&family=Galada&family=Galindo&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "DM Sans", sans-serif;
+  --font-display: "Berkshire Swash", cursive;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: #f7f4ec;
+    color: #20332c;
+    font-family: "DM Sans", sans-serif;
+  }
+
+  button,
+  a {
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  input,
+  textarea,
+  select {
+    outline: none;
+  }
+
+  ::selection {
+    background: #dcae67;
+    color: #173128;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: "Berkshire Swash", cursive;
+  }
+
+  .font-diphylleia {
+    font-family: "Diphylleia", serif;
+  }
+
+  .font-fruktur {
+    font-family: "Fruktur", cursive;
+  }
+
+  .font-galindo {
+    font-family: "Galada", sans-serif;
+  }
+
+  .font-galada {
+    font-family: "Galada", cursive;
+  }
+
+  .btn {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    border-radius: 0.75rem;
+    padding: 0.7rem 1rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+    .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+  }
+
+  .btn-primary {
+    background: #264438;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #315749;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    background: #dcae67;
+    color: #20332c;
+  }
+
+  .btn-secondary:hover {
+    background: #e6bd7c;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: #405249;
+  }
+
+  .btn-ghost:hover {
+    background: #eeece5;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    font-family: "Berkshire Swash", cursive;
+    font-size: clamp(2.7rem, 5vw, 4.8rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+
+  .section-title em {
+    color: #96734a;
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  .status {
+    display: inline-flex;
+    width: fit-content;
+    border-radius: 99px;
+    background: #e4eee8;
+    padding: 0.25rem 0.55rem;
+    font-size: 9px;
+    font-weight: 700;
+    color: #34604f;
+    white-space: nowrap;
+  }
+
+  .status-gold {
+    background: #f2e5ce;
+    color: #8a6331;
+  }
+
+  .field {
+    width: 100%;
+    border: 1px solid #d8d5cc;
+    border-radius: 0.7rem;
+    background: white;
+    padding: 0.72rem 0.8rem;
+    font-size: 0.84rem;
+    color: #263a31;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+  }
+
+  .field:focus {
+    border-color: #547565;
+    box-shadow: 0 0 0 3px rgb(84 117 101 / 0.12);
+  }
+
+  .form-section {
+    border-bottom: 1px solid #ded9cd;
+    padding-bottom: 0.7rem;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8a673d;
+  }
+
+  .input-shell {
+    display: flex;
+    height: 42px;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #deddd6;
+    border-radius: 0.75rem;
+    background: white;
+    padding: 0 0.8rem;
+    color: #7a867f;
+  }
+
+  .input-shell input {
+    width: 160px;
+    font-size: 0.75rem;
+  }
+
+  .attendance-select {
+    min-width: 92px;
+    border-radius: 99px;
+    border: 0;
+    padding: 0.42rem 0.7rem;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .on-time {
+    background: #e1eee7;
+    color: #35604f;
+  }
+
+  .late {
+    background: #f2e6cc;
+    color: #89632e;
+  }
+
+  .absent {
+    background: #f3dfd8;
+    color: #9a543f;
+  }
+}
+
+@media (max-width: 640px) {
+  .section-title {
+    font-size: 2.8rem;
+  }
+}
